@@ -24,7 +24,7 @@ module.exports = function (app) {
         let project = req.params.project;
 
         if (!req.body.issue_title || !req.body.issue_text || !req.body.created_by) {
-          return res.status(400).json({ error: "required field(s) missing" });
+          return res.status(200).json({ error: "required field(s) missing" });
         }
 
         const issue = new IssueModel({ ...req.body, project });
@@ -59,7 +59,7 @@ module.exports = function (app) {
           const issue = await IssueModel.findByIdAndUpdate(_id, filteredUpdateFields, { new: true });
 
           if (!issue) {
-            return res.status(404).json({ error: "could not update", _id });
+            return res.json({ error: "could not update", _id });
           }
 
           res.json({ result: "successfully updated", _id });
@@ -75,19 +75,19 @@ module.exports = function (app) {
 
       try {
         if (!_id) {
-          return res.status(400).json({ error: "missing _id" });
+          return res.json({ error: "missing _id" });
         }
 
         const issue = await IssueModel.findByIdAndDelete(_id);
 
         if (!issue) {
-          return res.status(404).json({ error: "could not delete", _id });
+          return res.json({ error: "could not delete", _id });
         }
 
         return res.json({ result: "successfully deleted", _id });
       } catch (error) {
         console.error(error);
-        res.status(500).json({ error: "could not delete", _id });
+        res.json({ error: "could not delete", _id });
       }
     });
 };
