@@ -20,56 +20,59 @@ chai.use(chaiHttp);
 suite("Functional Tests", () => {
   suite("Create Issue", () => {
     test("#1 Create an issue with every field", (done) => {
+      const allFieldsIssue = {
+        issue_title: "new issue",
+        issue_text: "text",
+        created_by: "test script",
+        assigned_to: "Devs",
+        status_text: "Open",
+      };
       chai
         .request(server)
         .keepOpen()
         .post("/api/issues/apitest/")
-        .send({
-          issue_title: "new issue",
-          issue_text: "text",
-          created_by: "test script",
-          assigned_to: "Devs",
-          status_text: "Open",
-        })
+        .send(allFieldsIssue)
         .end(function (err, res) {
           assert.equal(res.status, 200);
-          assert.equal(res.body.issue_title, "new issue");
-          assert.equal(res.body.issue_text, "text");
-          assert.equal(res.body.created_by, "test script");
-          assert.equal(res.body.assigned_to, "Devs");
-          assert.equal(res.body.status_text, "Open");
+          assert.equal(res.body.issue_title, allFieldsIssue.issue_title);
+          assert.equal(res.body.issue_text, allFieldsIssue.issue_text);
+          assert.equal(res.body.created_by, allFieldsIssue.created_by);
+          assert.equal(res.body.assigned_to, allFieldsIssue.assigned_to);
+          assert.equal(res.body.status_text, allFieldsIssue.status_text);
           assert.equal(res.body.open, true);
           done();
         });
     });
     test("#2 Create an issue with only required fields", (done) => {
+      const requiredFieldsIssue = {
+        issue_title: "new issue",
+        issue_text: "text",
+        created_by: "test script",
+      };
       chai
         .request(server)
         .keepOpen()
         .post("/api/issues/apitest/")
-        .send({
-          issue_title: "new issue",
-          issue_text: "text",
-          created_by: "test script",
-        })
+        .send(requiredFieldsIssue)
         .end(function (err, res) {
           assert.equal(res.status, 200);
-          assert.equal(res.body.issue_title, "new issue");
-          assert.equal(res.body.issue_text, "text");
-          assert.equal(res.body.created_by, "test script");
+          assert.equal(res.body.issue_title, requiredFieldsIssue.issue_title);
+          assert.equal(res.body.issue_text, requiredFieldsIssue.issue_text);
+          assert.equal(res.body.created_by, requiredFieldsIssue.created_by);
           assert.equal(res.body.open, true);
           done();
         });
     });
     test("#3 Create an issue with missing required fields", (done) => {
+      const issueWithMissingRequiredFields = {
+        assigned_to: "Devs",
+        status_text: "Open",
+      };
       chai
         .request(server)
         .keepOpen()
         .post("/api/issues/apitest/")
-        .send({
-          assigned_to: "Devs",
-          status_text: "Open",
-        })
+        .send(issueWithMissingRequiredFields)
         .end(function (err, res) {
           assert.equal(res.status, 400);
           assert.equal(res.body.error, "required field(s) missing");
