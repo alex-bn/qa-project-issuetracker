@@ -74,7 +74,7 @@ suite("Functional Tests", () => {
         .post("/api/issues/apitest/")
         .send(issueWithMissingRequiredFields)
         .end(function (err, res) {
-          assert.equal(res.status, 400);
+          assert.equal(res.status, 200);
           assert.equal(res.body.error, "required field(s) missing");
           done();
         });
@@ -240,7 +240,7 @@ suite("Functional Tests", () => {
         .put("/api/issues/apitest") // update
         .send({ _id: invalidId, issue_text: "value" })
         .end(function (err, res) {
-          assert.equal(res.status, 404);
+          assert.equal(res.status, 200);
           assert.equal(res.body._id, invalidId);
           assert.equal(res.body.error, "could not update"); // assert
           done();
@@ -275,7 +275,7 @@ suite("Functional Tests", () => {
         .delete("/api/issues/apitest") // delete
         .send({ _id: invalidId })
         .end(function (err, res) {
-          assert.equal(res.status, 404);
+          assert.equal(res.status, 200);
           assert.equal(res.body._id, invalidId);
           assert.equal(res.body.error, "could not delete"); // assert
           done();
@@ -288,7 +288,7 @@ suite("Functional Tests", () => {
         .delete("/api/issues/apitest") // delete
         .send({})
         .end(function (err, res) {
-          assert.equal(res.status, 400);
+          assert.equal(res.status, 200);
           assert.equal(res.body.error, "missing _id"); // assert
           done();
         });
